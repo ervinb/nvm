@@ -2690,8 +2690,6 @@ nvm() {
         while [ $tries_global -gt 0 ]; do
           ( nvm install "$PROVIDED_VERSION" && touch $installed_flag ) &
           proc_id="$!"
-          #wait $proc_id
-          #result=$?
 
           # Check every 2 seconds if the installation finished,
           # if it did, install the needed npm packages and exit
