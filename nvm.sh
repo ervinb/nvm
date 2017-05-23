@@ -2692,7 +2692,7 @@ nvm() {
           nvm install "$PROVIDED_VERSION" && touch $installed_flag
 
           if [ -f $installed_flag ]; then
-            npm install -g grunt-cli bower
+            npm install --color false -g grunt-cli bower
 
             rm $installed_flag &>/dev/null
             return
