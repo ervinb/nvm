@@ -2684,34 +2684,24 @@ nvm() {
 
       # Install version if not available
       if ! nvm ls "$PROVIDED_VERSION" &>/dev/null; then
-        tries_global=3
+        tries=1
         installed_flag="/tmp/.nvm_success"
 
-        while [ $tries_global -gt 0 ]; do
-          ( nvm install "$PROVIDED_VERSION" && touch $installed_flag ) &
-          proc_id="$!"
+        # Try installing the version 3 times
+        while [ $tries -lt 4 ]; do
+          nvm install "$PROVIDED_VERSION" && touch $installed_flag
 
-          # Check every 2 seconds if the installation finished,
-          # if it did, install the needed npm packages and exit
-          tries_install=10
-          while [ $tries_install -gt 0 ]; do
-            if [ -f $installed_flag ]; then
-              npm install -g grunt-cli bower
+          if [ -f $installed_flag ]; then
+            npm install -g grunt-cli bower
 
-              rm $installed_flag &>/dev/null
-              return
-            fi
-            sleep 2
-            tries_install=$(( $tries_install - 1 ))
-          done
+            rm $installed_flag &>/dev/null
+            return
+          fi
 
-          # Kill process after 20 seconds
-          kill $proc_id &>/dev/null
-
-          tries_global=$(( $tries_global - 1 ))
+          rm $installed_flag &>/dev/null
+          tries=$(( $tries + 1 ))
         done
 
-        echo "Cannot install and use $PROVIDED_VERSION - network/disk space issues might be the reason."
         return 1
       fi
 
