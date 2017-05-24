@@ -2695,11 +2695,10 @@ nvm() {
           if [ -f $installed_flag ]; then
             npm install --color false -g grunt-cli bower
 
-            [ -f $installed_flag ] && rm $installed_flag 2>&1 1>/dev/null
+            rm $installed_flag 2>&1 1>/dev/null
             return
           fi
 
-          [ -f $installed_flag ] && rm $installed_flag 2>&1 1>/dev/null
           tries=`expr $tries + 1`
         done
 
