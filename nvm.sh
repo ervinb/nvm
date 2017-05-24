@@ -2683,7 +2683,8 @@ nvm() {
       fi
 
       # Install version if not available
-      if ! nvm ls "$PROVIDED_VERSION" &>/dev/null; then
+      nvm ls "$PROVIDED_VERSION" 2>&1 1>/dev/null
+      if [ $? -ne 0 ]; then
         tries=1
         installed_flag="/tmp/.nvm_success"
 
@@ -2694,12 +2695,12 @@ nvm() {
           if [ -f $installed_flag ]; then
             npm install --color false -g grunt-cli bower
 
-            rm $installed_flag &>/dev/null
+            rm $installed_flag 2>&1 1>/dev/null
             return
           fi
 
-          rm $installed_flag &>/dev/null
-          tries=$(( $tries + 1 ))
+          rm $installed_flag 2>&1 1>/dev/null
+          tries=`expr $tries + 1`
         done
 
         return 1
